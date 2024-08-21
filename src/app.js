@@ -6,15 +6,21 @@ import { ApiResponse } from "./utils/ApiResponse.js";
 
 const app = express();
 
-app.use(cors({
-  origin: "*",
-}));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
+
+app.get("/", (req, res) => {
+  res.send("Hello world");
+});
 
 app.use("/*", (req, res, next) => {
   return res
