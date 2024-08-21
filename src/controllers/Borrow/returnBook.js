@@ -6,13 +6,15 @@ const returnBook = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const { returnedDate } = req.body;
+
     if (!id) {
-      return res.status(400).json({ message: "Required Fields missing" });
+      return res
+        .status(400)
+        .send(new ApiResponse(400, null, "Required Fields missing"));
     }
 
-    const borrow = await Borrow.findOne({
-      $and: [{ _id: id }, { user: req.user._id }],
-    });
+    const borrow = await Borrow.findById(id).populate("book");
 
     if (!borrow) {
       return res
@@ -20,31 +22,21 @@ const returnBook = async (req, res) => {
         .send(new ApiResponse(404, null, "Borrow record not found!"));
     }
 
-    const book = await Book.findOne({ id });
+    const returned = await Borrow.create({
+      returnedDate,
+    });
 
-    if (!book) {
-      return res
-      .status(404)
-      .send(
-        new ApiResponse(404, null, "Book with provided ID does not exist!")
-      );
-  }
+    await returned.save();
 
-  if (!borrow.returnedDate) {
-    book.copies += 1;
-    borrow.returnedDate = new Date();
+    const book = borrow.book;
 
-    await borrow.save();
+    book.borrowed = book.borrowed > 0 ? book.borrowed - 1 : 0;
     await book.save();
+
     res
       .status(200)
-      .send(new ApiResponse(200, { book, borrow }, "Book returned!"));
-  } else {
-    res
-      .status(400)
-      .send(new ApiResponse(400, null, "Book has already been returned!"));
-  }
-} catch (error) {
+      .send(new ApiResponse(200, null, "Book returned successfully!"));
+  } catch (error) {
   console.log(error);
   res.status(500).send(new ApiResponse(500, error, "Failed!"));
 }
