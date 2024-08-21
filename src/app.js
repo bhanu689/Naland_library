@@ -6,7 +6,9 @@ import { ApiResponse } from "./utils/ApiResponse.js";
 
 const app = express();
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: "*",
+}));
 
 app.use(express.json());
 
