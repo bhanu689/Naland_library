@@ -18,9 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello world");
-});
+
 
 app.use("/*", (req, res, next) => {
   return res
