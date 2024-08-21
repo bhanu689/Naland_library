@@ -9,7 +9,7 @@ const getPaginated = (model) => {
       const results = {};
   
       try {
-        const totalDocuments = await model.countDocuments();
+        const totalDocuments = await model.countDocuments(filter);
   
         if (endIndex < totalDocuments) {
           results.next = {
