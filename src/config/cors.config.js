@@ -1,4 +1,4 @@
-const whitelist = ["http://localhost:5000", "mongodb+srv://Bhavana:Bhavana@123@cluster0.vmake.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"];
+const whitelist = ["http://localhost:5000", "https://naland-library.onrender.com"];
 
 const corsOptions = {
   origin: function (origin, callback) {
